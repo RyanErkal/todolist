@@ -1,11 +1,47 @@
 class todo {
-	constructor() {
-		this.title = "";
-		this.description = "";
-		this.dueDate = "";
-		this.priority = "";
-		this.notes = "";
-		this.checklist = [];
+	constructor(title, description, priority, notes, checklist) {
+		this.title = title;
+		this.description = description;
+		this.priority = priority;
+		this.notes = notes;
+		this.checklist = checklist;
+	}
+	newTodo(title, description, priority, notes, checklist) {
+		this.title = title;
+		this.description = description;
+		this.priority = priority;
+		this.notes = notes;
+		this.checklist = checklist;
+	}
+	setTitle(title) {
+		this.title = title;
+	}
+	setDescription(description) {
+		this.description = description;
+	}
+	setPriority(priority) {
+		this.priority = priority;
+	}
+	setNotes(notes) {
+		this.notes = notes;
+	}
+	setChecklist(checklist) {
+		this.checklist = checklist;
+	}
+	getTitle() {
+		return this.title;
+	}
+	getDescription() {
+		return this.description;
+	}
+	getPriority() {
+		return this.priority;
+	}
+	getNotes() {
+		return this.notes;
+	}
+	getChecklist() {
+		return this.checklist;
 	}
 }
 
@@ -33,10 +69,25 @@ class todoList {
 }
 
 class project {
-	constructor() {
-		this.title = "";
-		this.description = "";
-		this.todoList = new todoList();
+	constructor(title, description) {
+		this.title = title;
+		this.description = description;
+	}
+	newProject(title, description) {
+		this.title = title;
+		this.description = description;
+	}
+	setTitle(title) {
+		this.title = title;
+	}
+	setDescription(description) {
+		this.description = description;
+	}
+	getTitle() {
+		return this.title;
+	}
+	getDescription() {
+		return this.description;
 	}
 }
 
@@ -63,31 +114,56 @@ class projectList {
 	}
 }
 
+todoList = new todoList();
+projectList = new projectList();
+
 function newTodo() {
-	const todo = new todo();
-	toggleOverlay();
-	todo.title = document.getElementById("title").value;
-	todo.description = document.getElementById("description").value;
-	todo.dueDate = document.getElementById("dueDate").value;
-	todo.priority = document.getElementById("priority").value;
-	todo.notes = document.getElementById("notes").value;
-	todo.checklist = document.getElementById("checklist").value;
-	todoList.add(todo);
+	let title = document.getElementById("title").value;
+	let description = document.getElementById("description").value;
+	let priority = document.getElementById("priority").value;
+	let notes = document.getElementById("notes").value;
+	let checklist = document.getElementById("checklist").value;
+	console.log(title, description, priority, notes, checklist);
+	title = new todo(title, description, priority, notes, checklist);
+	console.log(title);
+	todoList.add(title);
+	console.log(todoList);
 	updateTodoList();
+	closeOverlay();
+	toggleDarken();
 }
 
 function updateTodoList() {
-	let todoListDiv = document.querySelector(".todoList");
+	let todoListDiv = document.querySelector(".todolist");
 	todoListDiv.innerHTML = "";
 	todoList.get().forEach((todo) => {
 		todoListDiv.innerHTML += `
 			<div class="todo">
 				<h3>${todo.title}</h3>
-				<p>${todo.description}</p>	
-				<p>${todo.dueDate}</p>
-				<p>${todo.priority}</p>
-				<p>${todo.notes}</p>
-				<p>${todo.checklist}</p>
+				<button>+</button>
+			</div>
+		`;
+	});
+}
+
+function newProject() {
+	let title = document.getElementById("title").value;
+	let description = document.getElementById("description").value;
+	title = new project(title, description);
+	projectList.add(title);
+	console.log(projectList);
+	updateProjectList();
+	closeOverlay();
+	toggleDarken();
+}
+
+function updateProjectList() {
+	let projectListDiv = document.querySelector(".projectlist");
+	projectListDiv.innerHTML = "";
+	projectList.get().forEach((project) => {
+		projectListDiv.innerHTML += `
+			<div class="project">
+				<h3>${project.title}</h3>
 			</div>
 		`;
 	});
@@ -102,7 +178,7 @@ document.addEventListener("keydown", (event) => {
 	if (event.key === "Escape") {
 		if (document.querySelector(".overlay").classList.contains("active")) {
 			closeOverlay();
-			darkenBackground();
+			toggleDarken();
 		}
 	}
 });
@@ -113,7 +189,7 @@ function closeOverlay() {
 	overlayDiv.innerHTML = ``;
 }
 
-function darkenBackground() {
+function toggleDarken() {
 	let main = document.querySelector("main");
 	let header = document.querySelector("header");
 	let footer = document.querySelector("footer");
@@ -123,7 +199,7 @@ function darkenBackground() {
 }
 
 function newTodoOverlay() {
-	darkenBackground();
+	toggleDarken();
 	let overlayDiv = document.querySelector(".overlay");
 	overlayDiv.classList.toggle("active");
 	overlayDiv.innerHTML = `
@@ -134,8 +210,6 @@ function newTodoOverlay() {
 			<input type="text" id="title" name="title" />
 			<label for="description">Description</label>
 			<input type="text" id="description" name="description" />
-			<label for="dueDate">Due Date</label>
-			<input type="date" id="dueDate" name="dueDate" />
 			<label for="priority">Priority</label>
 			<select id="priority" name="priority">
 				<option value="low">Low</option>
@@ -149,11 +223,14 @@ function newTodoOverlay() {
 			<button type="button" id="addTodo">Add Todo</button>
 		</form>
 	</div>
-`;
+	`;
+	document.getElementById("addTodo").addEventListener("click", () => {
+		newTodo();
+	});
 }
 
 function newProjectOverlay() {
-	darkenBackground();
+	toggleDarken();
 	let overlayDiv = document.querySelector(".overlay");
 	overlayDiv.classList.toggle("active");
 	overlayDiv.innerHTML = `
@@ -167,18 +244,24 @@ function newProjectOverlay() {
 			<button type="button" id="addProject">Add Project</button>
 		</form>
 	</div>
-`;
+	`;
+	document.getElementById("addProject").addEventListener("click", () => {
+		newProject();
+	});
 }
 
-document.getElementById("addTodo").addEventListener("click", () => {
+document.getElementById("newTodo").addEventListener("click", () => {
 	newTodoOverlay();
+});
+
+document.getElementById("newProject").addEventListener("click", () => {
+	newProjectOverlay();
 });
 
 document.getElementById("editTodo").addEventListener("click", () => {
 	const todo = new todo();
 	todo.title = document.getElementById("title").value;
 	todo.description = document.getElementById("description").value;
-	todo.dueDate = document.getElementById("dueDate").value;
 	todo.priority = document.getElementById("priority").value;
 	todo.notes = document.getElementById("notes").value;
 	todo.checklist = document.getElementById("checklist").value.split(",");
@@ -189,15 +272,10 @@ document.getElementById("removeTodo").addEventListener("click", () => {
 	const todo = new todo();
 	todo.title = document.getElementById("title").value;
 	todo.description = document.getElementById("description").value;
-	todo.dueDate = document.getElementById("dueDate").value;
 	todo.priority = document.getElementById("priority").value;
 	todo.notes = document.getElementById("notes").value;
 	todo.checklist = document.getElementById("checklist").value.split(",");
 	todoList.remove(todo);
-});
-
-document.getElementById("newProject").addEventListener("click", () => {
-	newProjectOverlay();
 });
 
 document.getElementById("editProject").addEventListener("click", () => {
