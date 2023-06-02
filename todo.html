@@ -5,8 +5,57 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="style.css" />
-		<script src="script.js"></script>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400&display=swap');
+            </style>
+		<script src="script.js" /defer></script>
 		<title>Todo List</title>
 	</head>
-	<body></body>
+	<body>
+		<header>
+			<h1>Todo List</h1>
+			<nav class="nav">
+				<ul class="navs">
+					<li class="navitem">Home</li>
+					<li class="navitem">Projects</li>
+					<li class="navitem">Settings</li>
+				</ul>
+			</nav>
+		</header>
+        <div>
+            <main class="maindiv">
+                <div class="todos">
+                    <h2>Todos</h2>
+                    <div class="todolist">
+                        <div class="todo">Todo 1</div>
+                        <div class="todo">Todo 2</div>
+                        <div class="todo">Todo 3</div>
+                    </>
+                </div>
+                <div class="projects">
+                    <h3>Projects</h3>
+                    <div class="projectlist">
+                        <div class="project">Project 1</div>
+                        <div class="project">Project 2</div>
+                        <div class="project">Project 3</div>
+                    </>
+                </div>
+                <div class="buttons">
+                    <button id="addTodo" class="button">Add Todo</button>
+                    <button id="newProject" class="button">New Project</button>
+                </div>
+            </main>
+		<div>
+        <div class="overlay">
+            <button id="editTodo"></button>
+            <button id="removeTodo"></button>
+            <button id="newProject"></button>
+            <button id="editProject"></button>
+            <button id="removeProject"></button>
+        </div>
+		<footer>
+            <p>Created by Ryan Erkal</p>
+            <a href="https://github.com/RyanErkal">Github</a>
+        </footer>
+	</body>
 </html>
