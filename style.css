@@ -8,7 +8,7 @@ h1 {
 h2 {
 	font-size: 2rem;
 	font-weight: 700;
-	margin: 0;
+	margin: 0 2rem 0.5rem 2rem;
 	padding: 0;
 }
 h3 {
@@ -140,10 +140,10 @@ header {
 	align-items: center;
 	background-color: #fff;
 	color: #333;
-	width: 40%;
-	height: auto;
+	width: inherit;
+	height: inherit;
 	margin: auto;
-	padding: auto;
+	padding: 3rem;
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -152,16 +152,16 @@ header {
 }
 
 .active {
-	display: block;
-	justify-content: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
 	align-items: center;
-	text-align: center;
 	background-color: #fff;
 	color: #333;
 	width: auto;
 	height: auto;
-	margin: 0 auto;
-	padding: 1rem;
+	margin: auto;
+	padding: auto;
 	position: absolute;
 	top: 50%;
 	left: 50%;
