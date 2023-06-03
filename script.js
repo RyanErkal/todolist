@@ -124,13 +124,14 @@ function newTodo() {
 	let notes = document.getElementById("notes").value;
 	let checklist = document.getElementById("checklist").value;
 	//console.log(title, description, priority, notes, checklist);
-	title = new todo(title, description, priority, notes, checklist);
+	let newtodo = new todo(title, description, priority, notes, checklist);
 	//console.log(title);
-	todoList.add(title);
+	todoList.add(newtodo);
 	//console.log(todoList);
 	updateTodoList();
 	closeOverlay();
 	toggleDarken();
+	return newtodo;
 }
 
 function deleteTodo(todo) {
@@ -138,15 +139,47 @@ function deleteTodo(todo) {
 	updateTodoList();
 }
 
+function editTodo(todo) {
+	let newtodo = newTodo();
+	deleteTodo(todo);
+	todoList.edit(todo, newtodo);
+}
+
+function viewTodo() {
+	let todoListDiv = document.querySelector(".todolist");
+	todoListDiv.innerHTML = "";
+	if (todoList.get().length == 0) {
+		todoListDiv.innerHTML += `
+			<div class="todo">
+				<h3>No Todos</h3>
+			</div>
+			`;
+	}
+	todoList.get().forEach((todo) => {
+		todoListDiv.innerHTML += `
+			<div class="todo">
+				<h3>${todo.title}</h3>
+				<button id="editTodo${todo.title}">Edit</button>
+				<button id="removeTodo${todo.title}">X</button>
+				<button id="viewTodo${todo.title}">+</button>
+			</div>
+			`;
+	});
+	todoList.get().forEach((todo) => {
+		addTodoListeners(todo);
+	});
+}
+
 function newProject() {
 	let title = document.getElementById("title").value;
 	let description = document.getElementById("description").value;
-	title = new project(title, description);
-	projectList.add(title);
+	let newproject = new project(title, description);
+	projectList.add(newproject);
 	//console.log(projectList);
 	updateProjectList();
 	closeOverlay();
 	toggleDarken();
+	return newproject;
 }
 
 function deleteProject(project) {
@@ -154,35 +187,57 @@ function deleteProject(project) {
 	updateProjectList();
 }
 
+function editProject(project) {
+	let newproject = newProject();
+	deleteProject(project);
+	projectList.edit(project, newproject);
+}
+
 function updateTodoList() {
 	let todoListDiv = document.querySelector(".todolist");
 	todoListDiv.innerHTML = "";
-	todoList.get().forEach((todo) => {
+	if (todoList.get().length == 0) {
 		todoListDiv.innerHTML += `
 			<div class="todo">
+				<h3>No Todos</h3>
+			</div>
+			`;
+	}
+	todoList.get().forEach((todo) => {
+		todoListDiv.innerHTML += `
+			<div class="todo" id="${todo.title}">
 				<h3>${todo.title}</h3>
+				<button id="editTodo${todo.title}">Edit</button>
 				<button id="removeTodo${todo.title}">X</button>
 			</div>
 			`;
 	});
 	todoList.get().forEach((todo) => {
-		addRemoveTodoListeners(todo);
+		addTodoListeners(todo);
 	});
 }
 
 function updateProjectList() {
 	let projectListDiv = document.querySelector(".projectlist");
 	projectListDiv.innerHTML = "";
-	projectList.get().forEach((project) => {
+	if (projectList.get().length == 0) {
 		projectListDiv.innerHTML += `
 			<div class="project">
+				<h3>No Projects</h3>
+			</div>
+		`;
+	}
+	projectList.get().forEach((project) => {
+		projectListDiv.innerHTML += `
+			<div class="project" id="${project.title}">
 				<h3>${project.title}</h3>
+				<button id="editProject${project.title}">Edit</button>
 				<button id="removeProject${project.title}">X</button>
 			</div>
 		`;
 	});
 	projectList.get().forEach((project) => {
-		addRemoveProjectListeners(project);
+		addProjectListeners(project);
 	});
 }
 
@@ -217,6 +272,64 @@ function newTodoOverlay() {
 	});
 }
 
+function editTodoOverlay(todo) {
+	toggleDarken();
+	let overlayDiv = document.querySelector(".overlay");
+	overlayDiv.classList.toggle("active");
+	overlayDiv.innerHTML = `
+	<div class="overlay-content">
+		<h3>Edit Todo</h3>
+		<form>
+			<label for="title">Title</label>
+			<input type="text" id="title" name="title" value="${todo.title}" />
+			<label for="description">Description</label>
+			<input type="text" id="description" name="description" value="${todo.description}" />
+			<label for="priority">Priority</label>
+			<select id="priority" name="priority">
+				<option value="low">Low</option>
+				<option value="medium">Medium</option>
+				<option value="high">High</option>
+			</select>
+			<label for="notes">Notes</label>
+			<input type="text" id="notes" name="notes" value="${todo.notes}" />
+			<label for="checklist">Checklist</label>
+			<input type="text" id="checklist" name="checklist" value="${todo.checklist}" />
+			<button type="button" id="editTodo">Edit Todo</button>
+		</form>
+	</div>
+	`;
+	document.getElementById("editTodo").addEventListener("click", () => {
+		editTodo(todo);
+	});
+}
+
+function viewTodoOverlay(todo) {
+	toggleDarken();
+	let overlayDiv = document.querySelector(".overlay");
+	overlayDiv.classList.toggle("active");
+	overlayDiv.innerHTML = `
+	<div class="overlay-content">
+		<h3>View Todo</h3>
+		<form>
+			<label for="title">Title</label>
+			<input type="text" id="title" name="title" value="${todo.title}" disabled/>
+			<label for="description">Description</label>
+			<input type="text" id="description" name="description" value="${todo.description}" disabled/>
+			<label for="priority">Priority</label>
+			<select id="priority" name="priority" disabled>
+				<option value="low">Low</option>
+				<option value="medium">Medium</option>
+				<option value="high">High</option>
+			</select>
+			<label for="notes">Notes</label>
+			<input type="text" id="notes" name="notes" value="${todo.notes}" disabled/>
+			<label for="checklist">Checklist</label>
+			<input type="text" id="checklist" name="checklist" value="${todo.checklist}" disabled/>
+		</form>
+	</div>
+	`;
+}
+
 function newProjectOverlay() {
 	toggleDarken();
 	let overlayDiv = document.querySelector(".overlay");
@@ -238,19 +351,81 @@ function newProjectOverlay() {
 	});
 }
 
-function addRemoveTodoListeners(todo) {
-	document
-		.getElementById(`removeTodo${todo.title}`)
-		.addEventListener("click", () => {
-			deleteTodo(todo);
-		});
+function editProjectOverlay(project) {
+	toggleDarken();
+	let overlayDiv = document.querySelector(".overlay");
+	overlayDiv.classList.toggle("active");
+	overlayDiv.innerHTML = `
+	<div class="overlay-content">
+		<h3>Edit Project</h3>
+		<form>
+			<label for="title">Title</label>
+			<input type="text" id="title" name="title" value="${project.title}" />
+			<label for="description">Description</label>
+			<input type="text" id="description" name="description" value="${project.description}" />
+			<button type="button" id="editProject">Edit Project</button>
+		</form>
+	</div>
+	`;
+	document.getElementById("editProject").addEventListener("click", () => {
+		editProject(project);
+	});
 }
 
-function addRemoveProjectListeners(project) {
+function viewProjectOverlay(project) {
+	toggleDarken();
+	let overlayDiv = document.querySelector(".overlay");
+	overlayDiv.classList.toggle("active");
+	overlayDiv.innerHTML = `
+	<div class="overlay-content">
+		<h3>View Project</h3>
+		<form>
+			<label for="title">Title</label>
+			<input type="text" id="title" name="title" value="${project.title}" disabled/>
+			<label for="description">Description</label>
+			<input type="text" id="description" name="description" value="${project.description}" disabled/>
+		</form>
+	</div>
+	`;
+}
+
+function addTodoListeners(todo) {
+	document
+		.getElementById(`removeTodo${todo.title}`)
+		.addEventListener("click", (e) => {
+			e.stopPropagation();
+			deleteTodo(todo);
+		});
+	document
+		.getElementById(`editTodo${todo.title}`)
+		.addEventListener("click", (e) => {
+			e.stopPropagation();
+			editTodoOverlay(todo);
+		});
+	document.getElementById(`${todo.title}`).addEventListener("click", (e) => {
+		e.stopPropagation();
+		viewTodoOverlay(todo);
+	});
+}
+
+function addProjectListeners(project) {
 	document
 		.getElementById(`removeProject${project.title}`)
-		.addEventListener("click", () => {
+		.addEventListener("click", (e) => {
+			e.stopPropagation();
 			deleteProject(project);
+		});
+	document
+		.getElementById(`editProject${project.title}`)
+		.addEventListener("click", (e) => {
+			e.stopPropagation();
+			editProjectOverlay(project);
+		});
+	document
+		.getElementById(`${project.title}`)
+		.addEventListener("click", (e) => {
+			e.stopPropagation();
+			viewProjectOverlay(project);
 		});
 }
 
@@ -295,6 +470,9 @@ document.getElementById("removeTodo").addEventListener("click", () => {
 	//this wont work because how do i know WHICH todo to remove?
 });
 
-document.getElementById("editProject").addEventListener("click", () => {});
+//document.getElementById("editProject").addEventListener("click", () => {});
 
-document.getElementById("removeProject").addEventListener("click", () => {});
+//document.getElementById("removeProject").addEventListener("click", () => {});
+
+document.onload = updateTodoList();
+document.onload = updateProjectList();

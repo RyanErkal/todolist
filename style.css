@@ -11,6 +11,12 @@ h2 {
 	margin: 0;
 	padding: 0;
 }
+h3 {
+	font-size: 1.5rem;
+	font-weight: 700;
+	margin: 0;
+	padding: 0;
+}
 body {
 	margin: 0;
 	padding: 0;
@@ -73,8 +79,7 @@ header {
 }
 .project:hover,
 .todo:hover {
-	background-color: #333;
-	color: #fff;
+	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
 }
 .buttons {
 	display: flex;
@@ -94,7 +99,6 @@ header {
 	background-color: #fff;
 	color: #333;
 }
-
 .overlay {
 	display: none;
 	position: fixed;
